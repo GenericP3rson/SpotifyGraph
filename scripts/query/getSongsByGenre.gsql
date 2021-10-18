@@ -1,0 +1,12 @@
+CREATE QUERY getSongsByGenre(STRING genre) FOR GRAPH SpotifyGraph {
+  TYPEDEF TUPLE <genre STRING, id STRING, name STRING, popularity INT, danceability DOUBLE, energy_level DOUBLE, energy DOUBLE, key_id INT, loudness DOUBLE, mode INT, speechiness DOUBLE, acousticness DOUBLE, instrumentalness DOUBLE, liveness DOUBLE, valence DOUBLE, tempo DOUBLE, uri STRING, track_href STRING, analysis_url STRING, duration_ms INT, time_signature INT> SONG_INFO;
+  ListAccum<SONG_INFO> @@songs;
+  
+  Seed = {Genre.*};
+
+  Res = SELECT s FROM Seed:a - (SONG_GENRE:e) - Song:s
+        WHERE a.name == genre
+        ACCUM @@songs+=SONG_INFO(a.name, s.id, s.name, s.popularity, s.danceability, s.energy_level, s.energy, s.key_id, s.loudness, s.mode, s.speechiness, s.acousticness, s.instrumentalness, s.liveness, s.valence, s.tempo, s.uri, s.track_href, s.analysis_url, s.duration_ms, s.time_signature);
+
+  PRINT @@songs; 
+}

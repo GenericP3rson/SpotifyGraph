@@ -1,0 +1,5 @@
+CREATE QUERY getSongs() FOR GRAPH SpotifyGraph {
+  Seed = {Song.*};
+
+  PRINT Seed; 
+}

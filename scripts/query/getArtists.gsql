@@ -1,0 +1,5 @@
+CREATE QUERY getArtists(STRING artist) FOR GRAPH SpotifyGraph {
+  Seed = {Artist.*};
+
+  PRINT Seed; 
+}

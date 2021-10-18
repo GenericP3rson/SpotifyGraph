@@ -1,0 +1,21 @@
+CREATE QUERY getVerticesFromSongs(STRING song_name) FOR GRAPH SpotifyGraph { 
+  TYPEDEF TUPLE <STRING name, STRING vertex_type> VALUE;
+  
+  ListAccum<VALUE> @@connectedVals;
+  
+  Seed = {Song.*};
+  
+  Res = SELECT tgt FROM Seed:s - (SONG_GENRE:e) - Genre:tgt
+        WHERE s.name == song_name
+        ACCUM @@connectedVals+= VALUE(tgt.name, "genre");
+  
+  Res1 = SELECT tgt FROM Seed:s - (SONG_ARTIST:e) - Artist:tgt
+        WHERE s.name == song_name
+        ACCUM @@connectedVals+= VALUE(tgt.name, "artist");
+  
+  Res2 = SELECT tgt FROM Seed:s - (SONG_PLAYLIST:e) - Playlist:tgt
+        WHERE s.name == song_name
+        ACCUM @@connectedVals+= VALUE(tgt.name, "playlist");
+  
+  PRINT @@connectedVals AS connectedVals;
+}

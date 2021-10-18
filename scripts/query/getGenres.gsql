@@ -1,0 +1,5 @@
+CREATE QUERY getGenres(STRING genre) FOR GRAPH SpotifyGraph {
+  Seed = {Genre.*};
+
+  PRINT Seed; 
+}

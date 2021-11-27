@@ -1,0 +1,21 @@
+CREATE QUERY edgeCrawl() FOR GRAPH SpotifyGraph { 
+  /*
+  Grabs all edges
+  */
+  
+  ListAccum<EDGE> @@edgeList;
+  
+  Seed = {Song.*};
+  
+  hop_1 = SELECT tgt FROM Seed:s - (SONG_PLAYLIST:e) - Playlist:tgt
+          ACCUM @@edgeList += e;
+  
+  hop_2 = SELECT tgt FROM Seed:s - (SONG_GENRE:e) - Genre:tgt
+          ACCUM @@edgeList += e;
+  
+  hop_3 = SELECT tgt FROM Seed:s - (SONG_ARTIST:e) - Artist:tgt
+          ACCUM @@edgeList += e;
+  
+  PRINT @@edgeList;
+  
+}
